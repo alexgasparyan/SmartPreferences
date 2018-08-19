@@ -15,6 +15,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.armdroid.smartpreferences.TypeUtils.isSameType;
 import static javax.tools.Diagnostic.Kind.ERROR;
 
 public class FieldValidator {
@@ -72,27 +73,27 @@ public class FieldValidator {
 
         } else {
             if (element.getAnnotation(IntPreference.class) != null
-                    && !typeUtils.isAssignable(fieldMirror, fieldType(Integer.class, elementUtils))) {
+                    && !isSameType(typeUtils, fieldMirror, fieldType(Integer.class, elementUtils))) {
                 error(messager, element, "Annotation @IntPreference must be used with int/Integer or must have @Transform annotation as well.");
                 return false;
             }
             if (element.getAnnotation(LongPreference.class) != null
-                    && !typeUtils.isAssignable(fieldMirror, fieldType(Long.class, elementUtils))) {
+                    && !isSameType(typeUtils, fieldMirror, fieldType(Long.class, elementUtils))) {
                 error(messager, element, "Annotation @LongPreference must be used with long/Long or must have @Transform annotation as well.");
                 return false;
             }
             if (element.getAnnotation(FloatPreference.class) != null
-                    && !typeUtils.isAssignable(fieldMirror, fieldType(Float.class, elementUtils))) {
+                    && !isSameType(typeUtils, fieldMirror, fieldType(Float.class, elementUtils))) {
                 error(messager, element, "Annotation @FloatPreference must be used with float/Float or must have @Transform annotation as well.");
                 return false;
             }
             if (element.getAnnotation(BooleanPreference.class) != null
-                    && !typeUtils.isAssignable(fieldMirror, fieldType(Boolean.class, elementUtils))) {
+                    && !isSameType(typeUtils, fieldMirror, fieldType(Boolean.class, elementUtils))) {
                 error(messager, element, "Annotation @BooleanPreference must be used with boolean/Boolean or must have @Transform annotation as well.");
                 return false;
             }
             if (element.getAnnotation(StringPreference.class) != null
-                    && !typeUtils.isAssignable(fieldMirror, fieldType(String.class, elementUtils))) {
+                    && !isSameType(typeUtils, fieldMirror, fieldType(String.class, elementUtils))) {
                 error(messager, element, "Annotation @StringPreference must be used with String or must have @Transform annotation as well.");
                 return false;
             }

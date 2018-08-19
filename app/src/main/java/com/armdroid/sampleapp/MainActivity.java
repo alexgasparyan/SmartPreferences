@@ -17,14 +17,14 @@ public class MainActivity extends AppCompatActivity {
 
     @StringPreference(defaultValue = "{ someField: \"abc\" }")
     @Transform(using = GsonTransformer.class, typeParam1 = Custom.class)
-    @Observe(tag = "customTag")
+    @Observe
     public Custom customFoo;
 
     @IntPreference
     protected int intFoo;
 
     @LongPreference(named = "longPreference")
-    @Observe(tag = "longTag")
+    @Observe
     public static long longFoo;
 
     @FloatPreference(named = "floatPreference", defaultValue = 2f)
@@ -90,12 +90,12 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
     }
 
-    @Subscribe(tag = "customTag")
+    @Subscribe(tag = "customFoo")
     public void onUpdateCompleted(Custom oldValue) {
         // here we can detect changes of customFoo
     }
 
-    @Subscribe(tag = "longTag")
+    @Subscribe(tag = "longFoo")
     public void onUpdateCompleted(long oldValue) {
         // here we can detect changes of longFoo
     }

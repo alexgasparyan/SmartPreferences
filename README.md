@@ -154,14 +154,14 @@ the type associated with preference to the type associated with class field. For
 
 ```java
 public abstract class GsonTransformer<To> implements PreferenceTransformer<String, To> {
-
+ 
     @Override
     public To convertRead(String from) {
         Type superClass = getClass().getGenericSuperclass();
         Type genericType = ((ParameterizedType) superClass).getActualTypeArguments()[0];
         return new Gson().fromJson(from, genericType);
     }
-
+    
     @Override
     public String convertWrite(To to) {
         Type superClass = getClass().getGenericSuperclass();
@@ -206,6 +206,7 @@ is add `@Observe` annotation to field and tell binding to listen changes:
 
 ```java
 public class MainActivity extends Activity {
+    
     @IntPrefernce(named = "observablePref")
     @Observe
     public int intFoo;
@@ -235,7 +236,6 @@ public class MainActivity extends Activity {
 Once we call `mBinding.observeChanges()`, whenever the value of the key `observablePref` changes
 in `SharedPreferences`, the value of our field `intFoo` will be updated.
 <br><br>Once we call `mBinding.stopObserveChanges()`, changes will not be observed anymore.
-<br><br>`Observe` annotation has attribute **tag** which will be explained in the next paragraph
 <br><br>Looking good, but it can get better if we provide update callback.
 
 
@@ -245,8 +245,9 @@ made and make appropriate actions. Let's have a look at previous example:
 
 ```java
 public class MainActivity extends Activity {
+    
     @IntPrefernce(named = "observablePref")
-    @Observe(tag = "FOO")
+    @Observe
     public int intFoo;
     
     private MainActivityPreferences mBinding;
@@ -270,19 +271,15 @@ public class MainActivity extends Activity {
         super.onPause();
     }
     
-    @Subscribe(tag = "FOO")
+    @Subscribe(tag = "intFoo")
     public void onIntFooUpdated(int oldValue) {
         //here we have parameter oldValue as the value before update and 
         //field intFoo which has the updated value
     }
 }
 ```
-For `@Observe`:
-* **tag** - Optional attribute that is used to bind listener method to field in the same class.
-
-For `@Subscribe`:
 * **tag** - Required attribute that is used to bind listener method to field in the same class. 
-Tag should not be empty, otherwise binding will not occur.
+Tag should match the name of the field (`intFoo` in the example above), otherwise binding will not occur.
 
 There are also limitations for listener method. Method:
  * Should **NOT be private.**
@@ -296,17 +293,17 @@ Let's have a full example, where comments will explain their use:
 
 ```java
 public class MainActivity extends Activity {
-
+    
     @StringPreference(defaultValue = "{ someField: \"abc\" }")
     @Transform(using = GsonTransformer.class, typeParam1 = Custom.class)
-    @Observe(tag = "customTag")
+    @Observe
     public Custom customFoo;
     
     @IntPreference
     protected int intFoo;
     
     @LongPreference(named = "longPreference")
-    @Observe(tag = "longTag")
+    @Observe
     public static long longFoo;
     
     @FloatPreference(named = "floatPreference", defaultValue = 2f)
@@ -374,12 +371,12 @@ public class MainActivity extends Activity {
         super.onDestroy();
     }
     
-    @Subscribe(tag = "customTag")
+    @Subscribe(tag = "customFoo")
     public void onUpdateCompleted(Custom oldValue) {
         // here we can detect changes of customFoo
     }
     
-    @Subscribe(tag = "longTag")
+    @Subscribe(tag = "longFoo")
     public void onUpdateCompleted(long oldValue) {
         // here we can detect changes of longFoo
     }

@@ -22,15 +22,15 @@ import java.lang.annotation.Target;
  *</code></pre>
  *
  * It is useful to use this annotation along with {@link Subscribe} on a listener method. This way not only value will be updated, but
- * a method specified by yourself will be invoked and old value will be available as well. In order to use this feature, tag
- * attribute must be set. For example:
+ * a method specified by yourself will be invoked and old value will be available as well. In order to use this feature, subscribe must have
+ * tag attribute set to field name. For example:
  *
  *<pre><code>
  * {@literal @}LongPreference
- * {@literal @}Observe(tag="myTag")
- *  public long a;
+ * {@literal @}Observe
+ *  public long longFoo;
  *
- * {@literal @}Subscribe(tag="myTag")
+ * {@literal @}Subscribe(tag="longFoo")
  *  public void onValueUpdate(long oldValue) {
  *
  *  }
@@ -40,11 +40,4 @@ import java.lang.annotation.Target;
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.SOURCE)
 public @interface Observe {
-
-    /**
-     * This attribute is only required when {@link Subscribe} annotation is also used. It provides connection between
-     * field and update callback method if tags match. Importantly, tag should never be empty in order to make the connection work.
-     * @return Tag that acts as connector.
-     */
-    String tag() default "";
 }

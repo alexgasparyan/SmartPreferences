@@ -7,11 +7,13 @@ import javax.annotation.processing.Messager;
 import javax.lang.model.element.Element;
 import javax.lang.model.element.ExecutableElement;
 import javax.lang.model.element.Modifier;
+import javax.lang.model.type.PrimitiveType;
 import javax.lang.model.type.TypeKind;
+import javax.lang.model.type.TypeMirror;
 import javax.lang.model.util.ElementFilter;
-import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.armdroid.smartpreferences.TypeUtils.isSameType;
 import static javax.tools.Diagnostic.Kind.ERROR;
 
 public class MethodValidator {
@@ -19,17 +21,18 @@ public class MethodValidator {
     public static String tryGetSubscribeMethodName(Element variable, Types typeUtils, Messager messager) {
         Element clazz = variable.getEnclosingElement();
         Observe observe = variable.getAnnotation(Observe.class);
-        if (observe != null && !observe.tag().isEmpty()) {
+        String tag = variable.getSimpleName().toString();
+        if (observe != null) {
             List<ExecutableElement> methods = ElementFilter
                     .methodsIn(clazz.getEnclosedElements())
                     .stream()
                     .filter(executableElement -> {
                         Subscribe subscribe = executableElement.getAnnotation(Subscribe.class);
-                        return subscribe != null && subscribe.tag().equals(observe.tag());
+                        return subscribe != null && subscribe.tag().equals(tag);
                     })
                     .collect(Collectors.toList());
             if (methods.size() > 1) {
-                error(messager, methods.get(0), "Found multiple methods with tag '" + observe.tag() +
+                error(messager, methods.get(0), "Found multiple methods with tag '" + tag +
                         "' and annotation @Subscribe");
                 return null;
             } else if (methods.size() == 1) {
@@ -39,12 +42,13 @@ public class MethodValidator {
                     return null;
                 }
                 if (method.getParameters().size() != 1) {
-                    error(messager, method, "Method with annotation @Subscribe and with tag '" + observe.tag() + "' must have 1 parameter" +
+                    error(messager, method, "Method with annotation @Subscribe and with tag '" + tag + "' must have 1 parameter" +
                             " of type " + variable.asType().toString() + ".");
                     return null;
                 }
-                if (!typeUtils.isAssignable(method.getParameters().get(0).asType(), variable.asType())) {
-                    error(messager, method, "Method with annotation @Subscribe and with tag '" + observe.tag() + "' must have 1 parameter" +
+
+                if (!isSameType(typeUtils, method.getParameters().get(0), variable)) {
+                    error(messager, method, "Method with annotation @Subscribe and with tag '" + tag + "' must have 1 parameter" +
                             " of type " + variable.asType().toString() + ".");
                     return null;
                 }
@@ -66,12 +70,12 @@ public class MethodValidator {
                     if (methodName.equals("get" + fieldNameCap)
                             && !isPrivate
                             && method.getParameters().isEmpty()) {
-                        return typeUtils.isAssignable(method.getReturnType(), element.asType());
+                        return isSameType(typeUtils, method.getReturnType(), element.asType());
                     } else if (methodName.equals("set" + fieldNameCap)
                             && !isPrivate
                             && method.getParameters().size() == 1
                             && method.getReturnType().getKind() == TypeKind.VOID) {
-                        return typeUtils.isAssignable(method.getParameters().get(0).asType(), element.asType());
+                        return isSameType(typeUtils, method.getParameters().get(0).asType(), element.asType());
                     }
                     return false;
                 }).toArray().length != 2) {
