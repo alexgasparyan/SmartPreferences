@@ -1,4 +1,4 @@
-#Smart Preferences
+# Smart Preferences #
 
 An extremely lightweight library that uses full power of annotation processing to 
 make working with android `SharedPreferences` easier than before.
@@ -10,15 +10,15 @@ You can:
 * Detect compile time errors in gradle console with the easiest
 possible way
 
-##Usage
+## Usage ##
 
 Add the following to the gradle file of your main module. The first one is the library itself.
 The second dependency is the annotation processor that is responsible for generating support
 classes. 
 ```gradle
 dependencies {
-    implementation 'com.armdroid:smartpreferences:x.y.z'
-    annotationProcessor 'com.armdroid:smartpreferences-processor:x.y.z'
+    implementation 'com.armdroid:smartpreferences:1.0.0'
+    annotationProcessor 'com.armdroid:smartpreferences-processor:1.0.0'
 }
 ```
 **Note**: Library fully supports `Kotlin`. More detailed, see at the bottom of md file.
@@ -37,7 +37,7 @@ public class App extends Application {
 And that's it! You can start playing with `SharedPreferences`. Let's have a look at
 full power of the library.
 
-###Declaration
+### Declaration ###
 You can create connection with `SharedPreferences` by adding one of the following annotations 
 to your field:
 * `@IntPreferene`
@@ -68,7 +68,7 @@ be `intFoo`)
 
 All kind of modifiers are allowed to be used with fields: **public, protected, static etc.** And even **private!**
 
-####Use of private fields 
+### Use of private fields ###
 You can use private fields with preference annotations, however **you have to provide** 
 getter and setter for that field. Absence of getter/setter will cause compilation error.
 
@@ -103,7 +103,7 @@ public class PojoClass {
 **Note** that access modifiers of getter/setter can be **public, protected** but not **private**.
 Boxing/unboxing can be used here as well and everywhere in the app.
 
-###Binding
+### Binding ###
 After annotations are added, generated class instance should bind target class
 so that `SharedPreferences` values can be read/written/observed. Here is how it is done:
 
@@ -148,7 +148,7 @@ Returned instance can be used to do lazy loading of fields, (un)registration of 
 4. Same as in the third case, but reads values from `SharedPreferences` as well.
 5. Same as in the third case, but writes values to `SharedPreferences` as well
 
-###@Transform
+### @Transform ###
 Along with `@***Preference` annotations, `@Tramform` annotation can be used to transform
 the type associated with preference to the type associated with class field. For example:
 
@@ -200,7 +200,7 @@ required for correct transformation, such as in the example above, however it is
 For that, this attribute imitates the type parameter of transformation class, as if it was wrtitten `GsonTransformer<Custom>.class`.
 * **typeParam2** - Optional second type parameter.
 
-###@Observe
+### @Observe ###
 Now here is the fun part. We can listen to changes in `SharedPreferences`. All you need to do
 is add `@Observe` annotation to field and tell binding to listen changes:
 
@@ -239,7 +239,7 @@ in `SharedPreferences`, the value of our field `intFoo` will be updated.
 <br><br>Looking good, but it can get better if we provide update callback.
 
 
-###@Subscribe
+### @Subscribe ###
 Besides updating the field when changes occur, we can also detect when changes are
 made and make appropriate actions. Let's have a look at previous example:
 
@@ -290,7 +290,7 @@ There are also limitations for listener method. Method:
  * Should have exactly one parameter of same type as the field with `@Observe` 
  annotation (in our case it is `int` or `Integer`).
  
-###More methods in generated class
+### More methods in generated class ###
 Besides the functionality above, there are some other useful methods in generated class.
 Let's have a full example, where comments will explain their use:
 
@@ -396,7 +396,7 @@ public class MainActivity extends Activity {
 }
 ```
 
-###Kotlin support
+### Kotlin support ###
 Library is fully compatible with Kotlin. Before using the library, some changes are required
 in main module gradle file:
  
@@ -444,7 +444,7 @@ class PojoClass {
 ```
 In the example above, all are correct. So here is a sum up for fields:
  * **primitives** - All applications are correct.
- * **String without @Transform** - All applications are correct + lateinit
+ * **String without @Transform** - All applications are correct + lateinit.
  * **String with @Transform and other objects** - Field must either be annotated as
  `@JvmField` and be `nullable` or must be `lateinit`.
  
