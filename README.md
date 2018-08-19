@@ -17,8 +17,8 @@ The second dependency is the annotation processor that is responsible for genera
 classes. 
 ```gradle
 dependencies {
-    implementation 'com.armdroid:smartpreferences:1.0.0'
-    annotationProcessor 'com.armdroid:smartpreferences-processor:1.0.0'
+    implementation 'com.armdroid:smartpreferences:1.0.2'
+    annotationProcessor 'com.armdroid:smartpreferences-processor:1.0.2'
 }
 ```
 **Note**: Library fully supports `Kotlin`. More detailed, see at the bottom of md file.
@@ -402,8 +402,8 @@ apply plugin: 'kotlin-kapt'
 
 ..
 dependencies {
-    implementation 'com.armdroid:smartpreferences:1.0.0'
-    kapt 'com.armdroid:smartpreferences-processor:1.0.0'
+    implementation 'com.armdroid:smartpreferences:1.0.2'
+    kapt 'com.armdroid:smartpreferences-processor:1.0.2'
 }
 ```
 
