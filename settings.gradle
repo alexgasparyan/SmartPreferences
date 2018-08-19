@@ -1,0 +1,1 @@
+include ':app', ':smart-preferences', ':smart-preferences-annotations', ':smart-preferences-processor'

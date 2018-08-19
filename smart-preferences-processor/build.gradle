@@ -1,0 +1,54 @@
+apply plugin: 'java-library'
+apply plugin: 'maven'
+
+def publish_version = '1.0.0'
+def localReleaseDest = "${buildDir}/release/${version}"
+
+dependencies {
+    api project(':smart-preferences-annotations')
+    implementation 'com.squareup:javapoet:1.11.1'
+}
+
+sourceCompatibility = "1.8"
+targetCompatibility = "1.8"
+
+
+uploadArchives {
+    repositories.mavenDeployer {
+        pom.groupId = 'com.armdroid'
+        pom.artifactId = 'smartpreferences-processor'
+        pom.version = publish_version
+        repository(url: "file://${localReleaseDest}")
+    }
+}
+
+task zipRelease(type: Zip) {
+    from localReleaseDest
+    destinationDir buildDir
+    archiveName "smartpreferences-processor-${publish_version}.zip"
+}
+
+task generateRelease {
+    doLast {
+        println "Release ${publish_version} can be found at ${localReleaseDest}/"
+        println "Release ${publish_version} zipped can be found ${buildDir}/${zipRelease.archiveName}"
+    }
+}
+
+task sourcesJar(type: Jar, dependsOn:classes) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn:javadoc) {
+    classifier = 'javadoc'
+    from javadoc.destinationDir
+}
+
+generateRelease.dependsOn(uploadArchives)
+generateRelease.dependsOn(zipRelease)
+
+artifacts {
+    archives sourcesJar
+    archives javadocJar
+}
