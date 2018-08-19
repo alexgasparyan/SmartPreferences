@@ -61,9 +61,9 @@ As you see, you can bind not only primitives, but also their boxed classes.
 You can provide additional attributes to annotations:
 * **named** - Defines the key that will be used to find value in `SharedPreferences`. If not
 provided, library will take the name of the field (in the first example above, the key will
-be `intFoo`)
+be `intFoo`).
 * **defaultValue** - Defines the default value which will be used when reading in case key is not found in
-`SharedPreferences`
+`SharedPreferences`.
 
 
 All kind of modifiers are allowed to be used with fields: **public, protected, static etc.** And even **private!**
@@ -187,7 +187,7 @@ public class PojoClass {
     }
 }    
 ```
-So whenever reading `Strin`g value associated with key `customFoo`, it will be transformed 
+So whenever reading `String` value associated with key `customFoo`, it will be transformed 
 to object of type `Custom` and whenever writing to preferences, `Custom` will be
 tranformed to `String`. More detailed:
 * **using** -  Required attribute that provides transformation class. Transformation class
@@ -278,10 +278,10 @@ public class MainActivity extends Activity {
 }
 ```
 For `@Observe`:
-* **tag** - Optional annotation that is used to bind listener method to field in the same class.
+* **tag** - Optional attribute that is used to bind listener method to field in the same class.
 
 For `@Subscribe`:
-* **tag** - Required annotation that is used to bind listener method to field in the same class. 
+* **tag** - Required attribute that is used to bind listener method to field in the same class. 
 Tag should not be empty, otherwise binding will not occur.
 
 There are also limitations for listener method. Method:
@@ -403,7 +403,7 @@ in main module gradle file:
 ```gradle
 apply plugin: 'kotlin-kapt'
 
-...
+..
 dependencies {
     implementation 'com.armdroid:smartpreferences:1.0.0'
     kapt 'com.armdroid:smartpreferences-processor:1.0.0'
@@ -445,6 +445,6 @@ class PojoClass {
 In the example above, all are correct. So here is a sum up for fields:
  * **primitives** - All applications are correct.
  * **String without @Transform** - All applications are correct + lateinit.
- * **String with @Transform and other objects** - Field must either be annotated as
+ * **String and other objects with @Transform** - Field must either be annotated as
  `@JvmField` and be `nullable` or must be `lateinit`.
  
