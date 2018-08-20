@@ -1,7 +1,7 @@
 apply plugin: 'com.android.library'
 apply plugin: 'maven'
 
-def publish_version = '1.0.0'
+def publish_version = '1.0.3'
 def localReleaseDest = "${buildDir}/release/${version}"
 
 android {
@@ -14,6 +14,7 @@ android {
 
 dependencies {
     api project(':smart-preferences-annotations')
+//    implementation 'com.armdroid:smartpreferences-annotations:1.0.3'
 }
 
 uploadArchives {

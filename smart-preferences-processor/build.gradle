@@ -1,11 +1,12 @@
 apply plugin: 'java-library'
 apply plugin: 'maven'
 
-def publish_version = '1.0.0'
+def publish_version = '1.0.3'
 def localReleaseDest = "${buildDir}/release/${version}"
 
 dependencies {
     api project(':smart-preferences-annotations')
+//    implementation 'com.armdroid:smartpreferences-annotations:1.0.3'
     implementation 'com.squareup:javapoet:1.11.1'
 }
 

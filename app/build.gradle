@@ -27,5 +27,7 @@ dependencies {
 
     api project(':smart-preferences')
     annotationProcessor project(':smart-preferences-processor')
+//    implementation 'com.armdroid:smartpreferences:1.0.3'
+//    annotationProcessor 'com.armdroid:smartpreferences-processor:1.0.3'
 }
 

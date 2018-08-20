@@ -388,6 +388,7 @@ public class PreferenceClassCreator {
                         var.getFieldNameCapitalized(),
                         var.getFieldType(),
                         getConverterTypeParameters(var),
+                        var.isList() ? "convertReadList" : "convertRead",
                         repoFieldName,
                         var.getPreferenceName(),
                         var.getDefaultValue());
@@ -401,11 +402,12 @@ public class PreferenceClassCreator {
             }
         } else {
             if (var.getTransformer() != null) {
-                methodBuilder.addStatement(String.format("$L.$L = ($T) new $T(){}.convertRead($L.get($S, %s))", var.getDefaultValueType()),
+                methodBuilder.addStatement(String.format("$L.$L = ($T) new $T(){}.$L($L.get($S, %s))", var.getDefaultValueType()),
                         targetClassFieldName,
                         var.getFieldName(),
                         var.getFieldType(),
                         getConverterTypeParameters(var),
+                        var.isList() ? "convertReadList" : "convertRead",
                         repoFieldName,
                         var.getPreferenceName(),
                         var.getDefaultValue());
@@ -423,10 +425,11 @@ public class PreferenceClassCreator {
     private static void setPreferenceWriteStatement(PrefField var, MethodSpec.Builder methodBuilder) {
         if (var.isPrivate()) {
             if (var.getTransformer() != null) {
-                methodBuilder.addStatement("$L.put($S, new $T(){}.convertWrite($L.get$L()))",
+                methodBuilder.addStatement("$L.put($S, new $T(){}.$L($L.get$L()))",
                         repoFieldName,
                         var.getPreferenceName(),
                         getConverterTypeParameters(var),
+                        var.isList() ? "convertWriteList" : "convertWrite",
                         targetClassFieldName,
                         var.getFieldNameCapitalized());
             } else {
@@ -438,10 +441,11 @@ public class PreferenceClassCreator {
             }
         } else {
             if (var.getTransformer() != null) {
-                methodBuilder.addStatement("$L.put($S, new $T(){}.convertWrite($L.$L))",
+                methodBuilder.addStatement("$L.put($S, new $T(){}.$L($L.$L))",
                         repoFieldName,
                         var.getPreferenceName(),
                         getConverterTypeParameters(var),
+                        var.isList() ? "convertWriteList" : "convertWrite",
                         targetClassFieldName,
                         var.getFieldName());
             } else {

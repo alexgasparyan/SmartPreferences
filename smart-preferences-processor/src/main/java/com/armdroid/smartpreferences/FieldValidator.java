@@ -15,6 +15,7 @@ import javax.lang.model.util.ElementFilter;
 import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
+import static com.armdroid.smartpreferences.TypeUtils.fieldType;
 import static com.armdroid.smartpreferences.TypeUtils.isSameType;
 import static javax.tools.Diagnostic.Kind.ERROR;
 
@@ -113,10 +114,5 @@ public class FieldValidator {
 
     private static void error(Messager messager, Element element, String error) {
         messager.printMessage(ERROR, error, element);
-    }
-
-    private static TypeMirror fieldType(Class clazz, Elements elementUtils) {
-        return elementUtils.getTypeElement(clazz.getCanonicalName()).asType();
-
     }
 }

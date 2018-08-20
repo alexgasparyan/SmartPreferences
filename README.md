@@ -154,7 +154,7 @@ the type associated with preference to the type associated with class field. For
 
 ```java
 public abstract class GsonTransformer<To> implements PreferenceTransformer<String, To> {
- 
+    
     @Override
     public To convertRead(String from) {
         Type superClass = getClass().getGenericSuperclass();
@@ -163,10 +163,26 @@ public abstract class GsonTransformer<To> implements PreferenceTransformer<Strin
     }
     
     @Override
+    public List<To> convertReadList(String from) {
+        Type superClass = getClass().getGenericSuperclass();
+        Type genericType = ((ParameterizedType) superClass).getActualTypeArguments()[0];
+        Type listGenericType = TypeToken.getParameterized(ArrayList.class, genericType).getType();
+        return new Gson().fromJson(from, listGenericType);
+    }
+    
+    @Override
     public String convertWrite(To to) {
         Type superClass = getClass().getGenericSuperclass();
         Type genericType = ((ParameterizedType) superClass).getActualTypeArguments()[0];
-        return new Gson().toJson(genericType);
+        return new Gson().toJson(to, genericType);
+    }
+    
+    @Override
+    public String convertWriteList(List<To> to) {
+        Type superClass = getClass().getGenericSuperclass();
+        Type genericType = ((ParameterizedType) superClass).getActualTypeArguments()[0];
+        Type listGenericType = TypeToken.getParameterized(ArrayList.class, genericType).getType();
+        return new Gson().toJson(to, listGenericType);
     }
 }
 ```
@@ -177,6 +193,10 @@ public class PojoClass {
     @StringPreference
     @Transform(using = GsonTransformer.class, typeParam1 = Custom.class)
     public Custom customFoo;
+    
+    @StringPreference
+    @Transform(using = GsonTransformer.class, typeParam1 = Custom.class)
+    public List<Custom> customFooList;
     
     class Custom {
         String field;
@@ -189,7 +209,13 @@ public class PojoClass {
 ```
 So whenever reading `String` value associated with key `customFoo`, it will be transformed 
 to object of type `Custom` and whenever writing to preferences, `Custom` will be
-tranformed to `String`. More detailed:
+transformed to `String`. 
+
+Similarly, whenever reading `String` value associated with key `customFooList`, it will be transformed 
+to object of type `List<Custom>` and whenever writing to preferences, `List<Custom>` will be
+transformed to `String`. 
+
+More detailed:
 * **using** -  Required attribute that provides transformation class. Transformation class
 must be of type `class` (not `interface`, not `enum`) and must implement `PreferenceTransformer<String, To>`.
 Class CAN be abstract, but should not have abstract methods (in fact, in the 

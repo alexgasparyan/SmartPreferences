@@ -65,7 +65,7 @@ public class Processor extends AbstractProcessor {
                 if (subscribeMethodName == null) {
                     return false;
                 }
-                vars.add(new PrefField(element, klass, subscribeMethodName, processingEnv.getTypeUtils()));
+                vars.add(new PrefField(element, klass, subscribeMethodName, processingEnv.getTypeUtils(), processingEnv.getElementUtils()));
                 mClassFieldMapping.put(prefClass, vars);
             } else {
                 return false;

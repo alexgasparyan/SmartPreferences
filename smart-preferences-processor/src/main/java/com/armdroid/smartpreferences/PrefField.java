@@ -1,12 +1,15 @@
 package com.armdroid.smartpreferences;
 
 import java.lang.annotation.Annotation;
+import java.util.List;
 
 import javax.lang.model.element.Element;
 import javax.lang.model.element.Modifier;
 import javax.lang.model.element.TypeElement;
+import javax.lang.model.element.VariableElement;
 import javax.lang.model.type.MirroredTypeException;
 import javax.lang.model.type.TypeMirror;
+import javax.lang.model.util.Elements;
 import javax.lang.model.util.Types;
 
 public class PrefField {
@@ -22,11 +25,13 @@ public class PrefField {
     private final String subscribeMethodName;
     private final int typeArgumentsSize;
     private final boolean isPrivate;
+    private final boolean isList;
 
     protected PrefField(Element element,
-                     Class<? extends Annotation> clazz,
-                     String subscribeMethodName,
-                     Types types) {
+                        Class<? extends Annotation> clazz,
+                        String subscribeMethodName,
+                        Types types,
+                        Elements elements) {
         Annotation annotation = element.getAnnotation(clazz);
         this.fieldName = element.getSimpleName().toString();
         this.subscribeMethodName = subscribeMethodName;
@@ -60,6 +65,7 @@ public class PrefField {
         typeParam2 = transformAnnotation != null ? getTypeParam2(transformAnnotation) : null;
         fieldType = element.asType();
         isPrivate = element.getModifiers().contains(Modifier.PRIVATE);
+        isList = types.isAssignable(types.erasure(fieldType), TypeUtils.fieldType(List.class, elements));
 
         if (transformer != null) {
             TypeElement typeElement = (TypeElement) types.asElement(transformer);
@@ -154,5 +160,9 @@ public class PrefField {
 
     public boolean isPrivate() {
         return isPrivate;
+    }
+
+    public boolean isList() {
+        return isList;
     }
 }
